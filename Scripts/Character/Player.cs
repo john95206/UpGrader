@@ -9,11 +9,16 @@
 	using Zenject;
 
 	public class Player : MonoBehaviour
-    {
+	{
 		[Inject]
 		GameManager.InputMaster inputMaster;
 
-		Rigidbody2D rb2D;
+		[NonSerialized]
+		public Rigidbody2D rb2D;
+		// 子オブジェクトに配置するかもしれないのでInspectorでアタッチを想定
+		public Renderer render;
+		// 接地したコライダーの保存用
+		GameObject groundedGameObject;
 
 		[SerializeField]
 		public UpGradeItem.ItemType gotItem;
@@ -21,43 +26,78 @@
 		[SerializeField]
 		bool IsActive;
 		bool jumpEnabled = true;
+		bool isVisible = false;
 
 		[SerializeField]
 		float moveSpeed = 2.0f;
 		[SerializeField]
-		float jumpPower = 180;
+		Vector2 jumpPower = new Vector2(0, 6);
+		[SerializeField]
+		Vector2 maxSpeed = new Vector2(8, 5);
+		[SerializeField]
+		Vector2 minSpeed = new Vector2(-8, -5);
+		public const float normalGravity = 30;
+		public float changableGravity = 0;
 
-		[SerializeField]
-		float speedVx = 0;
-		[SerializeField]
-		float speedVy = 0;
+		FloatReactiveProperty gravity = new FloatReactiveProperty(1);
+		
+		public float speedVx = 0;
+		public float speedVy = 0;
+
+		float groundY = 0;
+
+		public BoolReactiveProperty grounded = new BoolReactiveProperty(false);
+
+		/// <summary>
+		/// 他のオブジェクトの参照用
+		/// </summary>
+		/// <returns>Player</returns>
+		public static Player GetPlayer()
+		{
+			return GameObject.FindGameObjectWithTag(TermDefinition.Instance.PlayerTag).GetComponent<Player>();
+		}
 
 		private void Awake()
 		{
 			rb2D = GetComponent<Rigidbody2D>();
+			// renderはInspectorで取得
 		}
 
 		private void Start()
 		{
 			IsActive = true;
+
+			rb2D.gravityScale = gravity.Value;
+			// Memo: anti rigidbody2D
+			//grounded.Subscribe(_ =>
+			//{
+			//	if (grounded.Value)
+			//	{
+			//		Grounded();
+			//	}
+			//	else
+			//	{
+			//		DetouchGround();
+			//	}
+			//});
 		}
 
 		private void Update()
 		{
-			if((int)gotItem >= (int)UpGradeItem.ItemType.UPGRADE_JUMP)
+			if ((int)gotItem >= (int)UpGradeItem.ItemType.UPGRADE_JUMP)
 			{
 				if (inputMaster.JoyPadCheck(GameManager.INPUT_TYPE.JUMP) && jumpEnabled)
 				{
-					rb2D.AddForce(new Vector2(0, jumpPower));
+					ActionJump();
 				}
 			}
-			
 		}
 
 		private void FixedUpdate()
 		{
 			float speed = 0.0f;
 
+			#region InputHorizontal
 			if (inputMaster.JoyPadCheck(GameManager.INPUT_TYPE.LEFT))
 			{
 				speed = moveSpeed * -1;
@@ -66,27 +106,180 @@
 			{
 				speed = moveSpeed * 1;
 			}
+			#endregion
 
+			#region SpeedCalculate
 			speedVx = speed;
 			speedVy = rb2D.velocity.y;
+			// Memo: anti rigidbody2D
+			//speedVy -= GetGravity() * Time.fixedDeltaTime;
 
-			rb2D.velocity = new Vector2(speedVx, speedVy);
+			// 接地判定の更新
+			UpdateGrounded();
+
+			rb2D.velocity = new Vector2(Mathf.Clamp(speedVx, minSpeed.x, maxSpeed.y), Mathf.Clamp(speedVy, minSpeed.y, maxSpeed.y));
+			#endregion
 		}
 
+		/// <summary>
+		/// 接地判定の更新
+		/// </summary>
+		void UpdateGrounded()
+		{
+			if (!GetGrounded())
+			{
+				speedVy = rb2D.velocity.y;
+				
+			}
+			else
+			{
+				rb2D.gravityScale = 0;
+				if (speedVy < 0)
+				{
+					speedVy = 0;
+				}
+			}
+		}
+
+		void Grounded()
+		{
+			// 接地したのでジャンプしてもいいですよ
+			jumpEnabled = true;
+
+			// Memo: anti rigidbody2D
+			//if(GetGravity() > 0)
+			//{
+			//	SetGravity(-normalGravity);
+			//	speedVy = 0;
+			//}
+		}
+
+		void DetouchGround()
+		{
+			jumpEnabled = false;
+
+			// Memo: anti rigidbody2D
+			//if (GetGravity() <= 0)
+			//{
+			//	SetGravity(normalGravity);
+			//}
+		}
+
+		/// <summary>
+		/// カメラ内に自分が収まっているときに毎秒60回呼ばれる
+		/// </summary>
+		void OnWillRenderObject()
+		{
+			// そのカメラはメインカメラ？
+			if (Camera.current.name == TermDefinition.Instance.MainCameraName)
+			{
+				// 見えているぞ
+				isVisible = true;
+			}
+			else
+			{
+				// 観なかったことにしてやろう
+				isVisible = false;
+			}
+			Camera.main.GetComponent<CameraScripts>().CameraSwtich(transform.position);
+		}
+
+		/// <summary>
+		/// 衝突時の処理
+		/// </summary>
+		/// <param name="collision"></param>
 		private void OnCollisionEnter2D(Collision2D collision)
 		{
-			if(collision.gameObject.tag == "Stage")
+			#region Grounded
+			//接触したのが"Stage"タグだったら
+			if (collision.gameObject.tag == TermDefinition.Instance.StageTag)
 			{
-				jumpEnabled = true;
+				// 接触したポイントすべてにおいて接地判定
+				foreach (ContactPoint2D point in collision.contacts)
+				{
+					// 接地判定のボーダーライン。画像の真ん中から（真下+1ピクセル）を引いたもの
+					groundY = render.bounds.center.y - ((render.bounds.size.y - 0.01f) / 2);
+					// ボーダーラインと設置点の高さの差
+					var groundedDistance = groundY - point.point.y;
+					// 接地点の方がボーダーラインよりも低かったら
+					if (groundedDistance >= 0)
+					{
+						// 接地したGameObjectを取得
+						groundedGameObject = collision.gameObject;
+						// 接地したのでジャンプしてもいいですよ
+						jumpEnabled = true;
+						// 重力を無効にする
+						rb2D.gravityScale = 0;
+						break;
+					}
+				}
 			}
+			#endregion
 		}
+		/// <summary>
+		/// 物体から離れたときの処理
+		/// </summary>
+		/// <param name="collision"></param>
 		private void OnCollisionExit2D(Collision2D collision)
 		{
-			if (collision.gameObject.tag == "Stage")
+			#region DetouchGrounded
+			// 接地していたら
+			if (groundedGameObject != null)
 			{
-				jumpEnabled = false;
+				// 離れた物体が地面だったら離地処理
+				if (collision.gameObject == groundedGameObject)
+				{
+					groundedGameObject = null;
+					jumpEnabled = false;
+					rb2D.gravityScale = gravity.Value;
+				}
 			}
+			#endregion
+		}
 
+		public void ActionJump()
+		{
+			// Memo: anti rigidbody2D
+			//SetGrounded(false);
+
+			rb2D.velocity = jumpPower;
+		}
+
+		public void Dead()
+		{
+			Destroy(gameObject);
+		}
+
+		/// <summary>
+		/// 重力の値を変更する
+		/// </summary>
+		/// <param name="gravityValue"></param>
+		public void SetGravity(float gravityValue)
+		{
+			changableGravity = gravityValue;
+		}
+
+		public float GetGravity()
+		{
+			return gravity.Value + changableGravity;
+		}
+
+		/// <summary>
+		/// 接地フラグの変更
+		/// </summary>
+		/// <param name="isGrounded"></param>
+		public void SetGrounded(bool isGrounded)
+		{
+			grounded.Value = isGrounded;
+		}
+
+		/// <summary>
+		/// 接地フラグを取得
+		/// </summary>
+		/// <returns></returns>
+		public bool GetGrounded()
+		{
+			return grounded.Value;
 		}
 	}
 }
