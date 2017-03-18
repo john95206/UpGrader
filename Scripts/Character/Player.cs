@@ -17,7 +17,7 @@
 		public Rigidbody2D rb2D;
 		// 子オブジェクトに配置するかもしれないのでInspectorでアタッチを想定
 		public Renderer render;
-		GroundCollider collider;
+		GroundCollider groundCollider;
 		// 接地したコライダーの保存用
 		GameObject groundedGameObject;
 
@@ -61,9 +61,15 @@
 		private void Awake()
 		{
 			rb2D = GetComponent<Rigidbody2D>();
-			collider = GetComponent<GroundCollider>();
+			groundCollider = GetComponent<GroundCollider>();
 			// renderはInspectorで取得
-			collider.render = this.render;
+			if(groundCollider != null)
+			{
+				groundCollider.render = this.render;
+			}else
+			{
+				Debug.Log("NULL: GroundCollider");
+			}
 		}
 
 		private void Start()
@@ -208,7 +214,7 @@
 				foreach (ContactPoint2D point in collision.contacts)
 				{
 					// 接地点の方がボーダーラインよりも低かったら
-					if (collider.CheckGrounded())
+					if (groundCollider.CheckGrounded())
 					{
 						Grounded(collision);
 						break;
@@ -238,7 +244,7 @@
 
 		bool JumpCheck()
 		{
-			return jumpEnabled || collider.CheckGrounded();
+			return jumpEnabled || groundCollider.CheckGrounded();
 		}
 
 		public void ActionJump()
