@@ -17,6 +17,7 @@
 		public Rigidbody2D rb2D;
 		// 子オブジェクトに配置するかもしれないのでInspectorでアタッチを想定
 		public Renderer render;
+		GroundCollider collider;
 		// 接地したコライダーの保存用
 		GameObject groundedGameObject;
 
@@ -60,7 +61,9 @@
 		private void Awake()
 		{
 			rb2D = GetComponent<Rigidbody2D>();
+			collider = GetComponent<GroundCollider>();
 			// renderはInspectorで取得
+			collider.render = this.render;
 		}
 
 		private void Start()
@@ -86,9 +89,12 @@
 		{
 			if ((int)gotItem >= (int)UpGradeItem.ItemType.UPGRADE_JUMP)
 			{
-				if (inputMaster.JoyPadCheck(GameManager.INPUT_TYPE.JUMP) && jumpEnabled)
+				if (inputMaster.JoyPadCheck(GameManager.INPUT_TYPE.JUMP))
 				{
-					ActionJump();
+					if (JumpCheck())
+					{
+						ActionJump();
+					}
 				}
 			}
 		}
@@ -141,11 +147,14 @@
 			}
 		}
 
-		void Grounded()
+		void Grounded(Collision2D collision)
 		{
+			// 接地したGameObjectを取得
+			groundedGameObject = collision.gameObject;
 			// 接地したのでジャンプしてもいいですよ
 			jumpEnabled = true;
-
+			// 重力を無効にする
+			rb2D.gravityScale = 0;
 			// Memo: anti rigidbody2D
 			//if(GetGravity() > 0)
 			//{
@@ -156,8 +165,9 @@
 
 		void DetouchGround()
 		{
+			groundedGameObject = null;
 			jumpEnabled = false;
-
+			rb2D.gravityScale = gravity.Value;
 			// Memo: anti rigidbody2D
 			//if (GetGravity() <= 0)
 			//{
@@ -197,19 +207,10 @@
 				// 接触したポイントすべてにおいて接地判定
 				foreach (ContactPoint2D point in collision.contacts)
 				{
-					// 接地判定のボーダーライン。画像の真ん中から（真下+1ピクセル）を引いたもの
-					groundY = render.bounds.center.y - ((render.bounds.size.y - 0.01f) / 2);
-					// ボーダーラインと設置点の高さの差
-					var groundedDistance = groundY - point.point.y;
 					// 接地点の方がボーダーラインよりも低かったら
-					if (groundedDistance >= 0)
+					if (collider.CheckGrounded())
 					{
-						// 接地したGameObjectを取得
-						groundedGameObject = collision.gameObject;
-						// 接地したのでジャンプしてもいいですよ
-						jumpEnabled = true;
-						// 重力を無効にする
-						rb2D.gravityScale = 0;
+						Grounded(collision);
 						break;
 					}
 				}
@@ -229,20 +230,22 @@
 				// 離れた物体が地面だったら離地処理
 				if (collision.gameObject == groundedGameObject)
 				{
-					groundedGameObject = null;
-					jumpEnabled = false;
-					rb2D.gravityScale = gravity.Value;
+					DetouchGround();
 				}
 			}
 			#endregion
 		}
 
+		bool JumpCheck()
+		{
+			return jumpEnabled || collider.CheckGrounded();
+		}
+
 		public void ActionJump()
 		{
+			rb2D.velocity = jumpPower;
 			// Memo: anti rigidbody2D
 			//SetGrounded(false);
-
-			rb2D.velocity = jumpPower;
 		}
 
 		public void Dead()

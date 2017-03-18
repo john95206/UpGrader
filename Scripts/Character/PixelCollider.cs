@@ -8,7 +8,7 @@ public class PixelCollider : MonoBehaviour {
 
 	// オブジェクトのスプライト
 	[SerializeField]
-	protected Renderer render;
+	public Renderer render;
 	// 現在の衝突レイヤー
 	protected LayerMask nowLayer;
 	BoxCollider2D boxCol = null;
