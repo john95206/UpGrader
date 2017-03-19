@@ -14,10 +14,18 @@ namespace Character
 		GroundCollider groundCollider;
 		Rigidbody2D rb2D;
 
+		// カメラに写っているかフラグ
+		bool isVisible = false;
 		// 生存フラグ
 		bool isAlive;
 		// 動けるかフラグ。拡張予定
-		public bool CanMove { get { return isAlive; } }
+		public bool CanMove
+		{
+			get
+			{
+				return isAlive && isVisible;
+			}
+		}
 		// 向いている方向
 		public FloatReactiveProperty dir = new FloatReactiveProperty(-1.0f);
 		// x座標のスピード
@@ -44,6 +52,8 @@ namespace Character
 			)
 			// 死んだらストリーム破棄
 			.AddTo(this.gameObject);
+
+			isAlive = true;
 		}
 
 		private void Update()
@@ -66,9 +76,6 @@ namespace Character
 		{
 			FixedUpdateCharacter();
 
-
-
-
 			if(rb2D != null)
 			{
 				rb2D.velocity = new Vector2(speedVx * dir.Value, rb2D.velocity.y + speedVy);
@@ -77,7 +84,6 @@ namespace Character
 
 		public virtual void FixedUpdateCharacter()
 		{
-
 		}
 
 		private void OnTriggerEnter2D(Collider2D collision)
@@ -128,11 +134,65 @@ namespace Character
 		}
 
 		/// <summary>
+		/// カメラ内に自分が収まっているときに毎秒60回呼ばれる
+		/// </summary>
+		void OnWillRenderObject()
+		{
+			// そのカメラはメインカメラ？
+			if (Camera.current.name == TermDefinition.Instance.MainCameraName)
+			{
+				// 見えているぞ
+				isVisible = true;
+			}
+			else
+			{
+				// 観なかったことにしてやろう
+				isVisible = false;
+			}
+		}
+
+		/// <summary>
 		/// 引き返す
 		/// </summary>
 		void LookBack()
 		{
 			dir.Value *= -1;
+		}
+
+		/// <summary>
+		/// SpeedVxを上書きする
+		/// </summary>
+		/// <param name="vx"></param>
+		protected void SetSpeedVx(float vx)
+		{
+			speedVx = vx;
+		}
+
+		/// <summary>
+		/// SpeedVyを上書きする
+		/// </summary>
+		/// <param name="vy"></param>
+		protected void SetSpeedVy(float vy)
+		{
+			speedVy = vy;
+		}
+
+		/// <summary>
+		/// SpeedVxに加算
+		/// </summary>
+		/// <param name="vx"></param>
+		protected void AddSpeedVx(float vx)
+		{
+			speedVx += vx;
+		}
+
+		/// <summary>
+		/// SpeedVyに加算
+		/// </summary>
+		/// <param name="vy"></param>
+		protected void SpeedVy(float vy)
+		{
+			speedVy += vy;
 		}
 
 		void Dead()
