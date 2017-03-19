@@ -5,7 +5,7 @@ namespace GameManager
 	using UnityEditor;
 	using UniRx;
 
-    public class SceneManager
+    public class SceneMaster
     {
         public void InitializePlayer (){; }
 

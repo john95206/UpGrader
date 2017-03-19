@@ -26,6 +26,9 @@ namespace Character
 		public float speedVy = 0.0f;
 		BoolReactiveProperty groundEdgeCheck = new BoolReactiveProperty();
 
+		[SerializeField]
+		bool isGroundEdgeChecker = true;
+
 		public virtual void Awake()
 		{
 			colliderList = GetComponents<Collider2D>();
@@ -47,10 +50,14 @@ namespace Character
 		{
 			if (groundCollider != null)
 			{
-				// 崖っぷちの時に方向転換
-				if (groundCollider.CheckGroundEdge(dir.Value))
+				// 崖っぷち時を気にする？
+				if (isGroundEdgeChecker)
 				{
-					dir.Value *= -1;
+					// 崖っぷちの時に方向転換
+					if (groundCollider.CheckGroundEdge(dir.Value))
+					{
+						LookBack();
+					}
 				}
 			}
 		}
@@ -59,9 +66,12 @@ namespace Character
 		{
 			FixedUpdateCharacter();
 
+
+
+
 			if(rb2D != null)
 			{
-				rb2D.velocity = new Vector2(speedVx * dir.Value, rb2D.velocity.y);
+				rb2D.velocity = new Vector2(speedVx * dir.Value, rb2D.velocity.y + speedVy);
 			}
 		}
 
@@ -90,6 +100,7 @@ namespace Character
 
 		private void OnCollisionEnter2D(Collision2D collision)
 		{
+			// プレイヤーとの衝突イベント
 			if (collision.gameObject.tag == TermDefinition.Instance.PlayerTag)
 			{
 				Player player = collision.gameObject.GetComponent<Player>();
@@ -104,6 +115,24 @@ namespace Character
 					player.Dead();
 				}
 			}
+			
+			// 壁とかに衝突したら引き返す
+			foreach(ContactPoint2D contact in collision.contacts)
+			{
+				if(contact.point.y > groundCollider.spriteBottomY)
+				{
+					LookBack();
+					break;
+				}
+			}
+		}
+
+		/// <summary>
+		/// 引き返す
+		/// </summary>
+		void LookBack()
+		{
+			dir.Value *= -1;
 		}
 
 		void Dead()

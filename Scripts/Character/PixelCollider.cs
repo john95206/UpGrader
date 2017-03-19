@@ -48,7 +48,7 @@ public class PixelCollider : MonoBehaviour {
 	// オブジェクトのY座標の速度
 	float speedY = 0.0f;
 
-	protected virtual void Awake()
+	protected virtual void Start()
 	{
 		SetBoxCollider2D();
 		SetCircleCollider2D();

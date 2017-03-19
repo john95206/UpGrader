@@ -17,6 +17,7 @@ namespace GameManager
 		ATTACK,
 		JUMP,
 		SUBMIT,
+		RETRY,
 	}
 
 	public class InputMaster : MonoBehaviour
@@ -115,6 +116,17 @@ namespace GameManager
 					}
 
 					if (Input.GetButtonDown("Submit"))
+					{
+						return true;
+					}
+					break;
+				case INPUT_TYPE.RETRY:
+					if (device.MenuWasPressed)
+					{
+						return true;
+					}
+
+					if (Input.GetButtonDown("Retry"))
 					{
 						return true;
 					}
