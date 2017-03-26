@@ -18,7 +18,7 @@ public class GroundCollider : PixelCollider {
 	/// <returns>接地判定</returns>
 	public bool CheckGrounded()
 	{
-		groundRay = DrawRayGizmo.RayCast(new Vector2(spriteCenter.x, spriteBottomY - 0.05f), Vector2.up, spriteUpY - spriteBottomY
+		groundRay = DrawRayGizmo.RayCast(new Vector2(spriteCenter.x, render.bounds.min.y - 0.05f), Vector2.up, spriteUpY - spriteBottomY
 			, LayerMask.GetMask(TermDefinition.Instance.GroundLayer), Color.yellow, true);
 
 		return groundRay;

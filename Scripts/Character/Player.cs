@@ -24,8 +24,10 @@
 		[SerializeField]
 		public UpGradeItem.ItemType gotItem;
 
-		[SerializeField]
-		bool IsActive;
+		// 生きているかフラグ。外からは取得だけできるようにする
+		public bool IsActive { get; private set; }
+		// 罠にかかっているか？
+		public bool isTrapped = false;
 		bool jumpEnabled = true;
 		bool isVisible = false;
 
@@ -289,6 +291,35 @@
 		public bool GetGrounded()
 		{
 			return grounded.Value;
+		}
+		
+		public bool GetScrapped(Vector2 originPos, bool isVertical)
+		{
+			return groundCollider.IsScrapped(originPos, isVertical);
+		}
+
+		public float GetPlayerWidth()
+		{
+			if (groundCollider.bodyCollider == null)
+			{
+#if UNITY_EDITOR
+				Debug.Log("NO COLLIDER");
+#endif
+				return 0;
+			}
+			return groundCollider.bodyCollider.bounds.size.x;
+		}
+
+		public float GetPlayerHeight()
+		{
+			if(groundCollider.bodyCollider == null)
+			{
+#if UNITY_EDITOR
+				Debug.Log("NO COLLIDER");
+#endif
+				return 0;
+			}
+			return groundCollider.bodyCollider.bounds.size.y;
 		}
 	}
 }

@@ -11,6 +11,7 @@ public class PixelCollider : MonoBehaviour {
 	public Renderer render;
 	// 現在の衝突レイヤー
 	protected LayerMask nowLayer;
+	public Collider2D bodyCollider = null;
 	BoxCollider2D boxCol = null;
 	CircleCollider2D circleCol = null;
 
@@ -50,16 +51,40 @@ public class PixelCollider : MonoBehaviour {
 
 	protected virtual void Start()
 	{
-		SetBoxCollider2D();
-		SetCircleCollider2D();
+		SetCollider2D();
 		SetSpriteEdge();
 		SetColliderEdge();
 	}
 
 	protected virtual void Update()
 	{
-		UpdateSprite();
-		UpdateCollider();
+		// UpdateSprite();
+		// UpdateCollider();
+	}
+
+	public bool IsScrapped(Vector2 originPos, bool isVertical)
+	{
+		// 上から押しつぶす系
+		if (isVertical)
+		{
+			// Rayを飛ばす方向。トラップに当たった場所の高さがキャラクターよりも高かった場合、プレイヤーの下にRayを飛ばす。
+			var checkDir = originPos.y > bodyCollider.bounds.center.y ? -1.0f : 1.0f;
+			var rayDir = new Vector2(0, checkDir);
+			// Ray生成
+			var scrapCheckRay = DrawRayGizmo.RayCast(bodyCollider.bounds.center, rayDir, bodyCollider.bounds.size.y / 2 + 0.01f, LayerMask.GetMask(TermDefinition.Instance.GroundLayer), Color.red, true);
+			// Rayを飛ばした先に地面があればTrue
+			return scrapCheckRay;
+		}
+		else
+		{
+			// Rayを飛ばす方向。トラップにあたった場所がキャラクターよりも右だった場合、プレイヤーの左にRayを飛ばす。
+			var checkDir = originPos.x > bodyCollider.bounds.center.x ? -1.0f : 1.0f;
+			var rayDir = new Vector2(checkDir, 0);
+			// Ray生成
+			var scrapCheckRay = DrawRayGizmo.RayCast(bodyCollider.bounds.center, rayDir, bodyCollider.bounds.size.x / 2 + 0.01f, LayerMask.GetMask(TermDefinition.Instance.GroundLayer), Color.red, true);
+			// Rayを飛ばした先に地面があればTrue
+			return scrapCheckRay;
+		}
 	}
 
 	/// <summary>
@@ -172,6 +197,26 @@ public class PixelCollider : MonoBehaviour {
 		if (boxCol == null)
 		{
 			Debug.Log(this.gameObject.name + "Has No CircleCollider2D");
+		}
+#endif
+	}
+
+	void SetCollider2D()
+	{
+		SetBoxCollider2D();
+		SetCircleCollider2D();
+		if (boxCol != null)
+		{
+			bodyCollider = boxCol;
+		}
+		else if(circleCol != null)
+		{
+			bodyCollider = circleCol;
+		}
+#if UNITY_EDITOR
+		else
+		{
+			Debug.Log("NO COLLIDER!!");
 		}
 #endif
 	}
