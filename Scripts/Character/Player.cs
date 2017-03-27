@@ -188,6 +188,9 @@
 		/// </summary>
 		void OnWillRenderObject()
 		{
+#if UNITY_EDITOR
+			groundCollider.CheckGrounded();
+#endif
 			// そのカメラはメインカメラ？
 			if (Camera.current.name == TermDefinition.Instance.MainCameraName)
 			{

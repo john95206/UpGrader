@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class CameraScripts : MonoBehaviour
 {
@@ -50,6 +51,15 @@ public class CameraScripts : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// 画面揺れ
+	/// </summary>
+	/// <param name="duration"></param>
+	/// <param name="strength"></param>
+	public void ShakeCamera(float duration = 0.5f, float strength = 0.5f, int vibrato = 30, float randomness = 90, bool snap = false, bool fadeout = false)
+	{
+		transform.DOShakePosition(duration, strength, vibrato, randomness, snap, fadeout);
+	}
 	void SetPositionX(float posX)
 	{
 		transform.position = new Vector3(transform.position.x + posX, transform.position.y, transform.position.z);

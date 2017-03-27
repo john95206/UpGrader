@@ -11,6 +11,7 @@ public class PixelCollider : MonoBehaviour {
 	public Renderer render;
 	// 現在の衝突レイヤー
 	protected LayerMask nowLayer;
+	protected LayerMask scrapLayer;
 	public Collider2D bodyCollider = null;
 	BoxCollider2D boxCol = null;
 	CircleCollider2D circleCol = null;
@@ -52,14 +53,14 @@ public class PixelCollider : MonoBehaviour {
 	protected virtual void Start()
 	{
 		SetCollider2D();
-		SetSpriteEdge();
-		SetColliderEdge();
+
+		// 壁と地面を検出するレイヤーを設定
+		AddLayerMask(scrapLayer, TermDefinition.Instance.DefaultLayer);
+		AddLayerMask(scrapLayer, TermDefinition.Instance.GroundLayer);
 	}
 
 	protected virtual void Update()
 	{
-		// UpdateSprite();
-		// UpdateCollider();
 	}
 
 	public bool IsScrapped(Vector2 originPos, bool isVertical)
@@ -71,7 +72,7 @@ public class PixelCollider : MonoBehaviour {
 			var checkDir = originPos.y > bodyCollider.bounds.center.y ? -1.0f : 1.0f;
 			var rayDir = new Vector2(0, checkDir);
 			// Ray生成
-			var scrapCheckRay = DrawRayGizmo.RayCast(bodyCollider.bounds.center, rayDir, bodyCollider.bounds.size.y / 2 + 0.01f, LayerMask.GetMask(TermDefinition.Instance.GroundLayer), Color.red, true);
+			var scrapCheckRay = DrawRayGizmo.RayCast(bodyCollider.bounds.center, rayDir, bodyCollider.bounds.size.y / 2 + 0.01f, LayerMask.GetMask(TermDefinition.Instance.GroundLayer) | LayerMask.GetMask(TermDefinition.Instance.WallLayer), Color.red, true);
 			// Rayを飛ばした先に地面があればTrue
 			return scrapCheckRay;
 		}
@@ -81,7 +82,7 @@ public class PixelCollider : MonoBehaviour {
 			var checkDir = originPos.x > bodyCollider.bounds.center.x ? -1.0f : 1.0f;
 			var rayDir = new Vector2(checkDir, 0);
 			// Ray生成
-			var scrapCheckRay = DrawRayGizmo.RayCast(bodyCollider.bounds.center, rayDir, bodyCollider.bounds.size.x / 2 + 0.01f, LayerMask.GetMask(TermDefinition.Instance.GroundLayer), Color.red, true);
+			var scrapCheckRay = DrawRayGizmo.RayCast(bodyCollider.bounds.center, rayDir, bodyCollider.bounds.size.x / 2 + 0.01f, LayerMask.GetMask(TermDefinition.Instance.GroundLayer) | LayerMask.GetMask(TermDefinition.Instance.WallLayer), Color.red, true);
 			// Rayを飛ばした先に地面があればTrue
 			return scrapCheckRay;
 		}
@@ -157,6 +158,15 @@ public class PixelCollider : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// 衝突レイヤーを追加
+	/// </summary>
+	/// <param name="LayerMaskName"></param>
+	public void AddLayerMask(LayerMask layer, string LayerMaskName)
+	{
+		layer |= LayerMask.GetMask(LayerMaskName);
+	}
+
+	/// <summary>
 	/// 衝突レイヤーを取得
 	/// </summary>
 	/// <returns>LayerMask</returns>
@@ -219,6 +229,12 @@ public class PixelCollider : MonoBehaviour {
 			Debug.Log("NO COLLIDER!!");
 		}
 #endif
+	}
+
+	protected void UpdateColliderEdge()
+	{
+		SetColliderEdge();
+		SetSpriteEdge();
 	}
 
 	/// <summary>

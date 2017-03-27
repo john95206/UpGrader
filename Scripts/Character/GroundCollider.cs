@@ -18,6 +18,8 @@ public class GroundCollider : PixelCollider {
 	/// <returns>接地判定</returns>
 	public bool CheckGrounded()
 	{
+		UpdateColliderEdge();
+
 		groundRay = DrawRayGizmo.RayCast(new Vector2(spriteCenter.x, render.bounds.min.y - 0.05f), Vector2.up, spriteUpY - spriteBottomY
 			, LayerMask.GetMask(TermDefinition.Instance.GroundLayer), Color.yellow, true);
 
@@ -30,6 +32,7 @@ public class GroundCollider : PixelCollider {
 	/// <returns>がけっぷちにいる→True</returns>
 	public bool CheckGroundEdge(float dir)
 	{
+		UpdateColliderEdge();
 		// そもそも設置してなかったらfalse
 		if (!CheckGrounded())
 		{

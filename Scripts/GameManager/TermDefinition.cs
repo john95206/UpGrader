@@ -66,6 +66,8 @@ public class TermDefinition {
 	public string GroundLayer { get { return "Ground"; } }
 	// Character
 	public string CharacterLayer { get { return "Character"; } }
+	// Wall
+	public string WallLayer { get { return "Wall"; } }
 
 	// === SceneName ===
 	// Test
