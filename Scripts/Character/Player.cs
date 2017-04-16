@@ -4,6 +4,7 @@
 	using UnityEngine;
 	using System;
 	using System.Collections;
+	using UpGradeItem;
 	using UniRx;
 	using UniRx.Triggers;
 	using Zenject;
@@ -21,8 +22,7 @@
 		// 接地したコライダーの保存用
 		GameObject groundedGameObject;
 
-		[SerializeField]
-		public UpGradeItem.ItemType gotItem;
+		public ItemType gotItem;
 
 		// 生きているかフラグ。外からは取得だけできるようにする
 		public bool IsActive { get; private set; }
@@ -39,6 +39,12 @@
 		Vector2 maxSpeed = new Vector2(8, 5);
 		[SerializeField]
 		Vector2 minSpeed = new Vector2(-8, -5);
+		// ショットの間隔
+		[SerializeField]
+		float shotInterval = 0.5f;
+		// ショットの弾
+		[SerializeField]
+		GameObject bullet = null;
 		public const float normalGravity = 30;
 		public float changableGravity = 0;
 
@@ -91,20 +97,35 @@
 			//		DetouchGround();
 			//	}
 			//});
+
+			// GunAction
+			var GunAction = Observable
+				.Interval(TimeSpan.FromSeconds(shotInterval))
+				.Select(enabled => ShotEnabled())
+				.Where(e => e)
+				.Select(upgrade => gotItem)
+				.Where(x => x >= ItemType.UPGRADE_GUN)
+				.Subscribe(_ =>
+				{
+					Shot();
+				}
+				)
+				.AddTo(gameObject);
+		}
+
+		/// <summary>
+		/// ショットを撃てるか
+		/// </summary>
+		/// <returns>プレイヤーが動いていればTrueを返す</returns>
+		bool ShotEnabled()
+		{
+			return speedVx != 0 || speedVy != 0;
 		}
 
 		private void Update()
 		{
-			if ((int)gotItem >= (int)UpGradeItem.ItemType.UPGRADE_JUMP)
-			{
-				if (inputMaster.JoyPadCheck(GameManager.INPUT_TYPE.JUMP))
-				{
-					if (JumpCheck())
-					{
-						ActionJump();
-					}
-				}
-			}
+			// パワーアップアクション
+			ActionAttack();
 		}
 
 		private void FixedUpdate()
@@ -133,6 +154,46 @@
 
 			rb2D.velocity = new Vector2(Mathf.Clamp(speedVx, minSpeed.x, maxSpeed.y), Mathf.Clamp(speedVy, minSpeed.y, maxSpeed.y));
 			#endregion
+		}
+
+		/// <summary>
+		/// パワーアップアクション
+		/// </summary>
+		void ActionAttack()
+		{
+			// ジャンプ
+			if ((int)gotItem >= (int)ItemType.UPGRADE_JUMP)
+			{
+				if (inputMaster.JoyPadCheck(GameManager.INPUT_TYPE.JUMP))
+				{
+					if (JumpCheck())
+					{
+						ActionJump();
+					}
+				}
+			}
+
+			// 銃攻撃はStart()でObservableにやる
+			
+		}
+
+		/// <summary>
+		/// 弾を撃つ
+		/// </summary>
+		void Shot()
+		{
+			GameObject bulletInstance = Instantiate(bullet.gameObject, transform, false);
+			PlayerBulletScript bulletInstanceScript = bulletInstance.GetComponent<PlayerBulletScript>();
+			if (bulletInstanceScript != null)
+			{
+				bulletInstanceScript.Initialize(speedVx, speedVy);
+			}
+#if UNITY_EDITOR
+			else
+			{
+				Debug.Log("BULLET: CantGetCOMPONENT!!!");
+			}
+#endif
 		}
 
 		/// <summary>
