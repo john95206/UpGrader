@@ -24,7 +24,8 @@ GameObject:
   - component: {fileID: 50708439241551212}
   - component: {fileID: 61498265160124088}
   - component: {fileID: 114599283645188714}
-  m_Layer: 11
+  - component: {fileID: 114918098865661532}
+  m_Layer: 15
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -90,12 +91,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   render: {fileID: 212273502793459474}
-  gotItem: 0
   isTrapped: 0
   moveSpeed: 4
   jumpPower: {x: 0, y: 6}
   maxSpeed: {x: 8, y: 5}
   minSpeed: {x: -8, y: -5}
+  shotInterval: 0.25
+  bullet: {fileID: 114031276343273368, guid: e67dc35636bf3194c93e4137e423e0e0, type: 2}
+  frashShotNum: 16
   changableGravity: 0
   speedVx: 0
   speedVy: 0
@@ -126,6 +129,19 @@ MonoBehaviour:
   colliderBottomY: 0
   edgeMargin: 0.1
   edgeLength: 1
+--- !u!114 &114918098865661532
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1135196765868732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9793607e91aed3a428bfcfeb5b2aab3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 0
+  isDead: 0
 --- !u!212 &212273502793459474
 SpriteRenderer:
   m_ObjectHideFlags: 1

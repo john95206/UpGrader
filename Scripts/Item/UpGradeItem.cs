@@ -58,7 +58,7 @@ namespace UpGradeItem
 					Debug.Log("UPGRADE: Fly Unlocked");
 					break;
 			}
-			player.gotItem = managerItemType;
+			player.SetUpgradeStatus(managerItemType);
 		}
 
 		/// <summary>

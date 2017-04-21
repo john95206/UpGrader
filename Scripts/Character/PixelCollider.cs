@@ -185,12 +185,10 @@ public class PixelCollider : MonoBehaviour {
 			boxCol = GetComponent<BoxCollider2D>();
 		}
 
-#if Unity_Editor
 		if (boxCol == null)
 		{
 			Debug.Log(this.gameObject.name + "Has No BoxCollider2D");
 		}
-#endif
 	}
 
 	public void SetCircleCollider2D(CircleCollider2D circleCollider2D = null)
@@ -202,13 +200,11 @@ public class PixelCollider : MonoBehaviour {
 		{
 			circleCol = GetComponent<CircleCollider2D>();
 		}
-
-#if Unity_Editor
+		
 		if (boxCol == null)
 		{
 			Debug.Log(this.gameObject.name + "Has No CircleCollider2D");
 		}
-#endif
 	}
 
 	void SetCollider2D()

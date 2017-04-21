@@ -24,7 +24,8 @@ GameObject:
   - component: {fileID: 50996317422414864}
   - component: {fileID: 114173052615579456}
   - component: {fileID: 114477531076721902}
-  m_Layer: 0
+  - component: {fileID: 114729106839456354}
+  m_Layer: 16
   m_Name: EnemyStampedMove
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,6 +120,19 @@ MonoBehaviour:
   speedVx: 5
   speedVy: 0
   isGroundEdgeChecker: 1
+--- !u!114 &114729106839456354
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1702348882700450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9793607e91aed3a428bfcfeb5b2aab3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 0
+  isDead: 0
 --- !u!212 &212691405854360070
 SpriteRenderer:
   m_ObjectHideFlags: 1

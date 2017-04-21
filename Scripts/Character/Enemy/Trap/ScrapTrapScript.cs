@@ -57,17 +57,13 @@
 				Player player = collision.gameObject.GetComponent<Player>();
 				if (player == null)
 				{
-#if UNITY_EDITOR
 					Debug.Log("Player has no Player COMPONENT!!");
-#endif
 					return;
 				}
 				// Playerが死んでたら終了
 				if (!player.IsActive)
 				{
-#if UNITY_EDITOR
 					Debug.Log("Player is UNENABLED!!");
-#endif
 					return;
 				}
 

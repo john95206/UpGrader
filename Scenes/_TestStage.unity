@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 12347703}
   - component: {fileID: 12347702}
   - component: {fileID: 12347701}
+  - component: {fileID: 12347706}
   m_Layer: 0
   m_Name: EnemyStampedMove (8)
   m_TagString: Untagged
@@ -234,6 +235,19 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!114 &12347706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 12347699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9793607e91aed3a428bfcfeb5b2aab3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 0
+  isDead: 0
 --- !u!1001 &70010423
 Prefab:
   m_ObjectHideFlags: 0
@@ -568,6 +582,7 @@ GameObject:
   - component: {fileID: 362776226}
   - component: {fileID: 362776225}
   - component: {fileID: 362776224}
+  - component: {fileID: 362776229}
   m_Layer: 0
   m_Name: EnemyStampedMove (11)
   m_TagString: Untagged
@@ -698,6 +713,19 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!114 &362776229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 362776222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9793607e91aed3a428bfcfeb5b2aab3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 0
+  isDead: 0
 --- !u!1 &366006209
 GameObject:
   m_ObjectHideFlags: 0
@@ -746,6 +774,7 @@ GameObject:
   - component: {fileID: 435996648}
   - component: {fileID: 435996647}
   - component: {fileID: 435996646}
+  - component: {fileID: 435996651}
   m_Layer: 0
   m_Name: EnemyStampedMove (6)
   m_TagString: Untagged
@@ -876,6 +905,19 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!114 &435996651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 435996644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9793607e91aed3a428bfcfeb5b2aab3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 0
+  isDead: 0
 --- !u!1001 &474784665
 Prefab:
   m_ObjectHideFlags: 0
@@ -1185,6 +1227,7 @@ GameObject:
   - component: {fileID: 630031634}
   - component: {fileID: 630031633}
   - component: {fileID: 630031632}
+  - component: {fileID: 630031637}
   m_Layer: 0
   m_Name: EnemyStampedMove (3)
   m_TagString: Untagged
@@ -1315,6 +1358,19 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!114 &630031637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 630031630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9793607e91aed3a428bfcfeb5b2aab3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 0
+  isDead: 0
 --- !u!1001 &773712602
 Prefab:
   m_ObjectHideFlags: 0
@@ -1895,6 +1951,7 @@ GameObject:
   - component: {fileID: 969510331}
   - component: {fileID: 969510330}
   - component: {fileID: 969510329}
+  - component: {fileID: 969510334}
   m_Layer: 0
   m_Name: EnemyStampedMove (2)
   m_TagString: Untagged
@@ -2025,6 +2082,19 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!114 &969510334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 969510327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9793607e91aed3a428bfcfeb5b2aab3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 0
+  isDead: 0
 --- !u!1001 &1053670140
 Prefab:
   m_ObjectHideFlags: 0
@@ -2063,17 +2133,6 @@ Prefab:
     - target: {fileID: 4878357275950828, guid: 0669aced5a9bb7343aa177e927d03eae, type: 2}
       propertyPath: m_RootOrder
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114253866590411868, guid: 0669aced5a9bb7343aa177e927d03eae,
-        type: 2}
-      propertyPath: bullet
-      value: 
-      objectReference: {fileID: 1216595559259278, guid: e67dc35636bf3194c93e4137e423e0e0,
-        type: 2}
-    - target: {fileID: 114253866590411868, guid: 0669aced5a9bb7343aa177e927d03eae,
-        type: 2}
-      propertyPath: shotInterval
-      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0669aced5a9bb7343aa177e927d03eae, type: 2}
@@ -2175,6 +2234,7 @@ GameObject:
   - component: {fileID: 1176213779}
   - component: {fileID: 1176213778}
   - component: {fileID: 1176213777}
+  - component: {fileID: 1176213782}
   m_Layer: 0
   m_Name: EnemyStampedMove (4)
   m_TagString: Untagged
@@ -2305,6 +2365,19 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!114 &1176213782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1176213775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9793607e91aed3a428bfcfeb5b2aab3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 0
+  isDead: 0
 --- !u!1 &1182117517
 GameObject:
   m_ObjectHideFlags: 0
@@ -2318,6 +2391,7 @@ GameObject:
   - component: {fileID: 1182117521}
   - component: {fileID: 1182117520}
   - component: {fileID: 1182117519}
+  - component: {fileID: 1182117524}
   m_Layer: 0
   m_Name: EnemyStampedMove (1)
   m_TagString: Untagged
@@ -2448,6 +2522,19 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!114 &1182117524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1182117517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9793607e91aed3a428bfcfeb5b2aab3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 0
+  isDead: 0
 --- !u!1 &1188480139
 GameObject:
   m_ObjectHideFlags: 0
@@ -2461,6 +2548,7 @@ GameObject:
   - component: {fileID: 1188480143}
   - component: {fileID: 1188480142}
   - component: {fileID: 1188480141}
+  - component: {fileID: 1188480146}
   m_Layer: 0
   m_Name: EnemyStampedMove (10)
   m_TagString: Untagged
@@ -2591,6 +2679,19 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!114 &1188480146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1188480139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9793607e91aed3a428bfcfeb5b2aab3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 0
+  isDead: 0
 --- !u!1001 &1212467645
 Prefab:
   m_ObjectHideFlags: 0
@@ -2766,6 +2867,7 @@ GameObject:
   - component: {fileID: 1347550501}
   - component: {fileID: 1347550500}
   - component: {fileID: 1347550499}
+  - component: {fileID: 1347550504}
   m_Layer: 0
   m_Name: EnemyStampedMove (9)
   m_TagString: Untagged
@@ -2896,6 +2998,19 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!114 &1347550504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1347550497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9793607e91aed3a428bfcfeb5b2aab3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 0
+  isDead: 0
 --- !u!1001 &1411499939
 Prefab:
   m_ObjectHideFlags: 0
@@ -3375,6 +3490,7 @@ GameObject:
   - component: {fileID: 1778296016}
   - component: {fileID: 1778296015}
   - component: {fileID: 1778296014}
+  - component: {fileID: 1778296019}
   m_Layer: 0
   m_Name: EnemyStampedMove (7)
   m_TagString: Untagged
@@ -3505,6 +3621,19 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!114 &1778296019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1778296012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9793607e91aed3a428bfcfeb5b2aab3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 0
+  isDead: 0
 --- !u!1001 &1809269230
 Prefab:
   m_ObjectHideFlags: 0

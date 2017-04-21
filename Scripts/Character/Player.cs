@@ -22,7 +22,7 @@
 		// 接地したコライダーの保存用
 		GameObject groundedGameObject;
 
-		public ItemType gotItem;
+		ItemType gotItem;
 
 		// 生きているかフラグ。外からは取得だけできるようにする
 		public bool IsActive { get; private set; }
@@ -44,7 +44,9 @@
 		float shotInterval = 0.5f;
 		// ショットの弾
 		[SerializeField]
-		GameObject bullet = null;
+		PlayerBulletScript bullet = null;
+		[SerializeField]
+		float frashShotNum = 16;
 		public const float normalGravity = 30;
 		public float changableGravity = 0;
 
@@ -99,15 +101,25 @@
 			//});
 
 			// GunAction
+			// TODO: いらないときに呼びすぎている。軽くしたい。
 			var GunAction = Observable
 				.Interval(TimeSpan.FromSeconds(shotInterval))
 				.Select(enabled => ShotEnabled())
-				.Where(e => e)
-				.Select(upgrade => gotItem)
-				.Where(x => x >= ItemType.UPGRADE_GUN)
+				.Where(x => x == true)
 				.Subscribe(_ =>
 				{
-					Shot();
+					Vector2 speedVec = new Vector2(speedVx, speedVy).normalized;
+					float rotation = Mathf.Atan2(speedVec.x, speedVec.y) * 180 / Mathf.PI;
+					if(rotation > 180)
+					{
+						rotation -= 360;
+					}
+					if(rotation < -180)
+					{
+						rotation += 360;
+					}
+					rotation -= 90;
+					Shot(Quaternion.Euler(0, 0, rotation));
 				}
 				)
 				.AddTo(gameObject);
@@ -119,7 +131,7 @@
 		/// <returns>プレイヤーが動いていればTrueを返す</returns>
 		bool ShotEnabled()
 		{
-			return speedVx != 0 || speedVy != 0;
+			return (speedVx != 0 || speedVy != 0) && CheckUpgradeStatus(ItemType.UPGRADE_GUN);
 		}
 
 		private void Update()
@@ -162,11 +174,15 @@
 		void ActionAttack()
 		{
 			// ジャンプ
-			if ((int)gotItem >= (int)ItemType.UPGRADE_JUMP)
+			if (CheckUpgradeStatus(ItemType.UPGRADE_JUMP))
 			{
 				if (inputMaster.JoyPadCheck(GameManager.INPUT_TYPE.JUMP))
 				{
 					if (JumpCheck())
+					{
+						ActionJump();
+					}
+					else if(CheckUpgradeStatus(ItemType.UPGRADE_DOUBLEJUMP))
 					{
 						ActionJump();
 					}
@@ -178,22 +194,33 @@
 		}
 
 		/// <summary>
+		/// プレイヤーを強化。Managerから呼ぶ。
+		/// </summary>
+		/// <param name="newType"></param>
+		public void SetUpgradeStatus(ItemType newType)
+		{
+			// プレイヤーのステータスを更新
+			gotItem = newType;
+		}
+
+		/// <summary>
+		/// プレイヤーが十分強化されているかチェック
+		/// </summary>
+		/// <param name="itemType"></param>
+		/// <returns>強化が十分ならTrue</returns>
+		bool CheckUpgradeStatus(ItemType itemType)
+		{
+			// 現在のプレイヤーの強化状態が引数のものよりも上回っていればTrue
+			return (int)gotItem >= (int)itemType;
+		}
+
+		/// <summary>
 		/// 弾を撃つ
 		/// </summary>
-		void Shot()
+		void Shot(Quaternion rotation)
 		{
-			GameObject bulletInstance = Instantiate(bullet.gameObject, transform, false);
-			PlayerBulletScript bulletInstanceScript = bulletInstance.GetComponent<PlayerBulletScript>();
-			if (bulletInstanceScript != null)
-			{
-				bulletInstanceScript.Initialize(speedVx, speedVy);
-			}
-#if UNITY_EDITOR
-			else
-			{
-				Debug.Log("BULLET: CantGetCOMPONENT!!!");
-			}
-#endif
+			PlayerBulletScript bulletInstance = Instantiate(bullet, transform.position, rotation) as PlayerBulletScript;
+			bulletInstance.Initialize();
 		}
 
 		/// <summary>
@@ -315,9 +342,30 @@
 
 		public void ActionJump()
 		{
+			// 全方位攻撃
+			if (CheckUpgradeStatus(ItemType.UPGRADE_FRASH))
+			{
+				ActionFrash();
+			}
 			rb2D.velocity = jumpPower;
 			// Memo: anti rigidbody2D
 			//SetGrounded(false);
+		}
+
+		/// <summary>
+		/// ジャンプ時に全方位にShotする攻撃。
+		/// </summary>
+		void ActionFrash()
+		{
+			for(int i = 0; i <= frashShotNum; i++)
+			{
+				Shot(Quaternion.Euler(0, 0, i * 360 / frashShotNum));
+			}
+		}
+
+		public void Damaged()
+		{
+			Dead();
 		}
 
 		public void Dead()

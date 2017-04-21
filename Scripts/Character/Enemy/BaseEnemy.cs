@@ -95,11 +95,11 @@ namespace Character
 				if (collision.transform.position.y > transform.position.y)
 				{
 					player.ActionJump();
-					Dead();
+					Damaged();
 				}
 				else
 				{
-					player.Dead();
+					player.Damaged();
 				}
 			}
 		}
@@ -114,11 +114,11 @@ namespace Character
 				if (collision.transform.position.y > transform.position.y)
 				{
 					player.ActionJump();
-					Dead();
+					Damaged();
 				}
 				else
 				{
-					player.Dead();
+					player.Damaged();
 				}
 			}
 			
@@ -195,6 +195,17 @@ namespace Character
 			speedVy += vy;
 		}
 
+		/// <summary>
+		/// TODO
+		/// </summary>
+		void Damaged()
+		{
+			Dead();
+		}
+
+		/// <summary>
+		/// 死亡
+		/// </summary>
 		void Dead()
 		{
 			isAlive = false;
