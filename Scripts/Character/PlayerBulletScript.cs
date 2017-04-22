@@ -22,11 +22,15 @@ public class PlayerBulletScript : BaseBullet {
 	/// <summary>
 	/// 角度で初期化
 	/// </summary>
-	public void Initialize()
+	public void Initialize(float playerSpeed)
 	{
+		// 敵を標的にする
+		isEnemyTarget = true;
+
 		// 自身の向きベクトル取得
 		float angleDir = transform.eulerAngles.z * (Mathf.PI / 180.0f);
 		dir = new Vector3(Mathf.Cos(angleDir), Mathf.Sin(angleDir), 0.0f);
+		speed += playerSpeed;
 	}
 
 	protected override void OnTriggerEnter2D(Collider2D col)

@@ -99,7 +99,8 @@ MonoBehaviour:
   shotInterval: 0.25
   bullet: {fileID: 114031276343273368, guid: e67dc35636bf3194c93e4137e423e0e0, type: 2}
   frashShotNum: 16
-  changableGravity: 0
+  quickSpeed: 2
+  changableGravity: 1
   speedVx: 0
   speedVy: 0
   grounded:

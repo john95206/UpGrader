@@ -47,8 +47,10 @@
 		PlayerBulletScript bullet = null;
 		[SerializeField]
 		float frashShotNum = 16;
+		[SerializeField]
+		float quickSpeed = 2;
 		public const float normalGravity = 30;
-		public float changableGravity = 0;
+		public float changableGravity = 1;
 
 		FloatReactiveProperty gravity = new FloatReactiveProperty(1);
 		
@@ -157,7 +159,6 @@
 
 			#region SpeedCalculate
 			speedVx = speed;
-			speedVy = rb2D.velocity.y;
 			// Memo: anti rigidbody2D
 			//speedVy -= GetGravity() * Time.fixedDeltaTime;
 
@@ -201,6 +202,19 @@
 		{
 			// プレイヤーのステータスを更新
 			gotItem = newType;
+
+			switch (gotItem)
+			{
+				case ItemType.UPGRADE_QUICK:
+					// スピードの限界を上げ、キャラの基本的な速度を上げる
+					maxSpeed.x *= quickSpeed;
+					maxSpeed.y *= quickSpeed;
+					minSpeed.x *= quickSpeed;
+					minSpeed.y *= quickSpeed;
+					moveSpeed *= quickSpeed;
+					SetGravity(quickSpeed);
+					break;
+			}
 		}
 
 		/// <summary>
@@ -220,7 +234,7 @@
 		void Shot(Quaternion rotation)
 		{
 			PlayerBulletScript bulletInstance = Instantiate(bullet, transform.position, rotation) as PlayerBulletScript;
-			bulletInstance.Initialize();
+			bulletInstance.Initialize(moveSpeed);
 		}
 
 		/// <summary>
@@ -231,7 +245,6 @@
 			if (!GetGrounded())
 			{
 				speedVy = rb2D.velocity.y;
-				
 			}
 			else
 			{
@@ -380,6 +393,7 @@
 		public void SetGravity(float gravityValue)
 		{
 			changableGravity = gravityValue;
+			gravity.Value = changableGravity;
 		}
 
 		public float GetGravity()
