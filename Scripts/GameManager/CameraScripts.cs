@@ -2,21 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using GameManager;
+using Zenject;
 
 public class CameraScripts : MonoBehaviour
 {
+	[Inject]
+	CameraManager cameraManager;
 	Camera thisCamera;
+	Character.Player player;
 
 	private void Start()
 	{
 		thisCamera = GetComponent<Camera>();
+		// 重いけど面倒くさいのでとりあえずこれで
+		player = FindObjectOfType<Character.Player>();
+	}
+
+	private void Update()
+	{
+		PositionSwtich(player.transform.position);
 	}
 
 	/// <summary>
 	/// カメラの座標を切り替える
 	/// </summary>
 	/// <param name="playerPos">プレイヤーの座標</param>
-	public void CameraSwtich(Vector3 playerPos)
+	public bool PositionSwtich(Vector3 playerPos)
 	{
 		var playerPosPoint = new Vector3(playerPos.x, playerPos.y, -transform.position.z);
 
@@ -32,23 +44,29 @@ public class CameraScripts : MonoBehaviour
 		//　左に見切れた時
 		if(playerPos.x < bottomLeft.x)
 		{
-			SetPositionX(1200 * -0.01f);
+			SetPositionX(cameraManager.CameraSizeX * -0.01f);
+			return true;
 		}
 		// 右に見切れた時
 		else if(playerPos.x > topRight.x)
 		{
-			SetPositionX(1200 * 0.01f);
+			SetPositionX(cameraManager.CameraSizeX * 0.01f);
+			return true;
 		}
 		// 下に見切れた時
 		else if(playerPos.y < bottomLeft.y)
 		{
-			SetPositionY(900 * -0.01f);
+			SetPositionY(cameraManager.CameraSizeY * -0.01f);
+			return true;
 		}
 		// 上に見切れた時
 		else if(playerPos.y > topRight.y)
 		{
-			SetPositionY(900 * 0.01f);
+			SetPositionY(cameraManager.CameraSizeY * 0.01f);
+			return true;
 		}
+
+		return false;
 	}
 
 	/// <summary>

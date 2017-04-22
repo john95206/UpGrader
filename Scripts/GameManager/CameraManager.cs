@@ -11,12 +11,22 @@ namespace GameManager
 
         public CameraType GetCameraType;
 
+		const float _cameraSizeX = 1280;
+		const float _cameraSizeY = 960;
+		public float CameraSizeX { get { return _cameraSizeX; } private set {; } }
+		public float CameraSizeY { get { return _cameraSizeY; } private set {; } }
+		[System.NonSerialized]
+		public float cameraSizeHalf_X = 0;
+		[System.NonSerialized]
+		public float cameraSizeHalf_Y = 0;
 		[SerializeField]
 		Camera mainCamera;
 		CameraScripts cameraScr;
 
 		private void Start()
 		{
+			cameraSizeHalf_X = CameraSizeX / 2;
+			cameraSizeHalf_Y = CameraSizeY / 2;
 			RefreshCameraStatus();
 		}
 
@@ -58,6 +68,7 @@ namespace GameManager
 
 		private void Update()
 		{
+
 		}
 	}
 }

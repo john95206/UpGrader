@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class BaseBullet : MonoBehaviour {
 
@@ -18,7 +19,7 @@ public class BaseBullet : MonoBehaviour {
 	[SerializeField]
 	protected float speed = 3.0f;
 	protected Vector3 dir = Vector3.zero;
-
+	
 	Rigidbody2D rb2D = null;
 
 	protected void Awake()

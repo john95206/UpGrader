@@ -29,7 +29,6 @@
 		// 罠にかかっているか？
 		public bool isTrapped = false;
 		bool jumpEnabled = true;
-		bool isVisible = false;
 
 		[SerializeField]
 		float moveSpeed = 2.0f;
@@ -289,21 +288,7 @@
 		/// </summary>
 		void OnWillRenderObject()
 		{
-#if UNITY_EDITOR
-			groundCollider.CheckGrounded();
-#endif
-			// そのカメラはメインカメラ？
-			if (Camera.current.name == TermDefinition.Instance.MainCameraName)
-			{
-				// 見えているぞ
-				isVisible = true;
-			}
-			else
-			{
-				// 観なかったことにしてやろう
-				isVisible = false;
-			}
-			Camera.main.GetComponent<CameraScripts>().CameraSwtich(transform.position);
+
 		}
 
 		/// <summary>
