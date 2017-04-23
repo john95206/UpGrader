@@ -39,41 +39,60 @@ public class CameraScripts : MonoBehaviour
 	/// <param name="playerPos">プレイヤーの座標</param>
 	public bool PositionSwtich(Vector3 playerPos)
 	{
-		var playerPosPoint = new Vector3(playerPos.x, playerPos.y, -transform.position.z);
-
-		// プレイヤーの座標をカメラ座標で取得
-		var pos = thisCamera.ScreenToWorldPoint(playerPosPoint);
-
-		// カメラの境界線の座標をカメラ座標で取得
-		var bottomLeft = thisCamera.ViewportToWorldPoint(new Vector3(0, 0, -transform.position.z));
-		var topRight = thisCamera.ViewportToWorldPoint(new Vector3(1, 1, -transform.position.z));
-
 		// どの方向に見切れたかでカメラの新しい座標を決める。
 		// 新しい座標は単位合わせのために0.01倍する
 		//　左に見切れた時
-		if(playerPos.x < bottomLeft.x)
+		if (playerPos.x < transform.position.x - (cameraManager.cameraSizeHalf_X * 0.01f))
 		{
 			SetPositionX(cameraManager.CameraSizeX * -0.01f);
 			return true;
 		}
 		// 右に見切れた時
-		else if(playerPos.x > topRight.x)
+		else if (playerPos.x > transform.position.x + (cameraManager.cameraSizeHalf_X * 0.01f))
 		{
 			SetPositionX(cameraManager.CameraSizeX * 0.01f);
 			return true;
 		}
 		// 下に見切れた時
-		else if(playerPos.y < bottomLeft.y)
+		else if (playerPos.y < transform.position.y - (cameraManager.cameraSizeHalf_Y * 0.01f))
 		{
 			SetPositionY(cameraManager.CameraSizeY * -0.01f);
 			return true;
 		}
 		// 上に見切れた時
-		else if(playerPos.y > topRight.y)
+		else if (playerPos.y > transform.position.y + (cameraManager.cameraSizeHalf_Y * 0.01f))
 		{
 			SetPositionY(cameraManager.CameraSizeY * 0.01f);
 			return true;
 		}
+		#region カメラから距離を測るやり方
+		// カメラの境界線の座標をカメラ座標で取得
+		//var bottomLeft = thisCamera.ViewportToWorldPoint(new Vector3(0, 0, -transform.position.z));
+		//var topRight = thisCamera.ViewportToWorldPoint(new Vector3(1, 1, -transform.position.z));
+		//if(playerPos.x < bottomLeft.x)
+		//{
+		//	SetPositionX(cameraManager.CameraSizeX * -0.01f);
+		//	return true;
+		//}
+		//// 右に見切れた時
+		//else if(playerPos.x > topRight.x)
+		//{
+		//	SetPositionX(cameraManager.CameraSizeX * 0.01f);
+		//	return true;
+		//}
+		//// 下に見切れた時
+		//else if(playerPos.y < bottomLeft.y)
+		//{
+		//	SetPositionY(cameraManager.CameraSizeY * -0.01f);
+		//	return true;
+		//}
+		//// 上に見切れた時
+		//else if(playerPos.y > topRight.y)
+		//{
+		//	SetPositionY(cameraManager.CameraSizeY * 0.01f);
+		//	return true;
+		//}
+		#endregion
 
 		return false;
 	}
