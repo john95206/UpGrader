@@ -7,9 +7,14 @@ namespace GameManager
 
     public class CameraManager : MonoBehaviour
     {
-		public enum CameraType { };
+		public enum CameraType
+		{
+			Classic,
+			Homing,
+			Stop,
+		};
 
-        public CameraType GetCameraType;
+        public CameraType cameraType = CameraType.Classic;
 
 		const float _cameraSizeX = 1280;
 		const float _cameraSizeY = 960;
@@ -21,13 +26,17 @@ namespace GameManager
 		public float cameraSizeHalf_Y = 0;
 		[SerializeField]
 		Camera mainCamera;
+		Camera[] cameras;
 		CameraScripts cameraScr;
+		[Inject]
+		GameManager gameManager;
 
 		private void Start()
 		{
 			cameraSizeHalf_X = CameraSizeX / 2;
 			cameraSizeHalf_Y = CameraSizeY / 2;
 			RefreshCameraStatus();
+			cameras = FindObjectsOfType<Camera>();
 		}
 
 		public void MainCameraChange()
@@ -47,9 +56,17 @@ namespace GameManager
 
 		}
 
-		public void SetCameraType()
+		public void SetCameraType(CameraType type)
 		{
-			
+			cameraType = type;
+		}
+
+		/// <summary>
+		/// カメラの動きを止める
+		/// </summary>
+		public void DisActiveMainCamera()
+		{
+			SetCameraType(CameraType.Stop);
 		}
 
 		/// <summary>
@@ -68,7 +85,6 @@ namespace GameManager
 
 		private void Update()
 		{
-
 		}
 	}
 }

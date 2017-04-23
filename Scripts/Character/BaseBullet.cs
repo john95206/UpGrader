@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using UniRx;
 
 public class BaseBullet : MonoBehaviour {
 
@@ -21,14 +22,20 @@ public class BaseBullet : MonoBehaviour {
 	protected Vector3 dir = Vector3.zero;
 	
 	Rigidbody2D rb2D = null;
+	Renderer render = null;
 
 	protected void Awake()
 	{
 		rb2D = GetComponent<Rigidbody2D>();
-
 		if (rb2D == null)
 		{
 			isRotation = true;
+		}
+
+		render = GetComponent<Renderer>();
+		if(render == null)
+		{
+			Debug.Log("Gun Renderer is null!!!");
 		}
 
 		Destroy(gameObject, lifeTime);
@@ -45,6 +52,11 @@ public class BaseBullet : MonoBehaviour {
 			// 自身の向きに移動
 			transform.position += dir * speed * Time.deltaTime;
 		}
+	}
+
+	private void OnBecameInvisible()
+	{
+		Destroy(gameObject);
 	}
 
 	#region Collider

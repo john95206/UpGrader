@@ -20,12 +20,25 @@ namespace GameManager
 		RETRY,
 	}
 
+	public enum GameType
+	{
+		IN_GAME,
+		MENU,
+		DIED,
+	}
+
 	public class InputMaster : MonoBehaviour
     {
 		
 		InputDevice device;
 
 		public INPUT_TYPE inputType;
+		public GameType gameType;
+
+		/// <summary>
+		/// プレイヤーを操作できるか。GameManagerからSetされるのを想定
+		/// </summary>
+		public bool IsActivePlayer { private get { return IsActivePlayer; } set {; } }
 
 		private void Start()
 		{
@@ -40,12 +53,10 @@ namespace GameManager
 
 		bool CanPlayerMove()
 		{
-			//if (!playerCtrl.activeSts || playerCtrl.activeEvent || FadeManager.Instance.SceneLoad ||
-			//	playerCtrl.hirumi || !playerCtrl.narrativeCheck)
-			//{
-			//	return false;
-			//}
-
+			if (!IsActivePlayer)
+			{
+				return false;
+			}
 			return true;
 		}
 

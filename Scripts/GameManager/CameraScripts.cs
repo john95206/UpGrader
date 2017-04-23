@@ -21,7 +21,16 @@ public class CameraScripts : MonoBehaviour
 
 	private void Update()
 	{
-		PositionSwtich(player.transform.position);
+		switch (cameraManager.cameraType)
+		{
+			case CameraManager.CameraType.Classic:
+				if (player != null)
+				{
+					PositionSwtich(player.transform.position);
+				}
+				break;
+
+		}
 	}
 
 	/// <summary>

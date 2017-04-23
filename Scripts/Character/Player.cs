@@ -5,6 +5,7 @@
 	using System;
 	using System.Collections;
 	using UpGradeItem;
+	using GameManager;
 	using UniRx;
 	using UniRx.Triggers;
 	using Zenject;
@@ -12,7 +13,9 @@
 	public class Player : MonoBehaviour
 	{
 		[Inject]
-		GameManager.InputMaster inputMaster;
+		InputMaster inputMaster;
+		[Inject]
+		GameManager gameManager;
 
 		[NonSerialized]
 		public Rigidbody2D rb2D;
@@ -58,6 +61,7 @@
 
 		float groundY = 0;
 
+		// 今は使っていない。ReactiveProperty勉強してからリベンジしたい。
 		public BoolReactiveProperty grounded = new BoolReactiveProperty(false);
 
 		/// <summary>
@@ -146,11 +150,11 @@
 			float speed = 0.0f;
 
 			#region InputHorizontal
-			if (inputMaster.JoyPadCheck(GameManager.INPUT_TYPE.LEFT))
+			if (inputMaster.JoyPadCheck(INPUT_TYPE.LEFT))
 			{
 				speed = moveSpeed * -1;
 			}
-			else if (inputMaster.JoyPadCheck(GameManager.INPUT_TYPE.RIGHT))
+			else if (inputMaster.JoyPadCheck(INPUT_TYPE.RIGHT))
 			{
 				speed = moveSpeed * 1;
 			}
@@ -176,7 +180,7 @@
 			// ジャンプ
 			if (CheckUpgradeStatus(ItemType.UPGRADE_JUMP))
 			{
-				if (inputMaster.JoyPadCheck(GameManager.INPUT_TYPE.JUMP))
+				if (inputMaster.JoyPadCheck(INPUT_TYPE.JUMP))
 				{
 					if (JumpCheck())
 					{

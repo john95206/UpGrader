@@ -20,7 +20,7 @@ namespace GameManager
 		private void Start()
 		{
 			nowPlayerUpgrade = ItemType.NONE;
-			nowUpgradeItem = ItemType.UPGRADE_JUMP;
+			nowUpgradeItem = ItemType.NONE;
 		}
 
 		/// <summary>

@@ -515,6 +515,7 @@ GameObject:
   - component: {fileID: 185835603}
   - component: {fileID: 185835602}
   - component: {fileID: 185835601}
+  - component: {fileID: 185835607}
   m_Layer: 0
   m_Name: GameModel
   m_TagString: Untagged
@@ -546,7 +547,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 955b4e545a909e448943a12b43d2fcfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GetCameraType: 0
+  cameraType: 0
   mainCamera: {fileID: 1895704135}
 --- !u!114 &185835603
 MonoBehaviour:
@@ -575,6 +576,7 @@ MonoBehaviour:
   - {fileID: 185835605}
   - {fileID: 185835602}
   - {fileID: 185835601}
+  - {fileID: 185835607}
   _identifier: 
   _context: {fileID: 0}
   _bindType: 0
@@ -590,6 +592,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputType: 0
+  gameType: 0
 --- !u!4 &185835606
 Transform:
   m_ObjectHideFlags: 0
@@ -603,6 +606,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &185835607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 185835600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79f674ef7b12f5242895cbdad649c70d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsCleared: 0
+  IsMovieScene: 0
 --- !u!1 &199989170
 GameObject:
   m_ObjectHideFlags: 0
