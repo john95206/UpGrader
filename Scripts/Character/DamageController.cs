@@ -20,6 +20,9 @@ namespace Character
 			if (hp == 0)
 			{
 				Dead();
+			}else
+			{
+				hp -= 1;
 			}
 		}
 

@@ -11,7 +11,7 @@ namespace Character
 	public class EnemyHorizonMove : BaseEnemy
     {
 
-		public override void Start()
+		protected override void Start()
 		{
 			base.Start();
 

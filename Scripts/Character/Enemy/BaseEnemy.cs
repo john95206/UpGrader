@@ -10,14 +10,15 @@ namespace Character
 
     public class BaseEnemy : MonoBehaviour
     {
-		Collider2D[] colliderList;
-		GroundCollider groundCollider;
-		Rigidbody2D rb2D;
+		protected Collider2D[] colliderList;
+		protected GroundCollider groundCollider;
+		protected Rigidbody2D rb2D;
+		protected DamageController damageCtrl;
 
 		// カメラに写っているかフラグ
-		bool isVisible = false;
+		protected bool isVisible = false;
 		// 生存フラグ
-		bool isAlive;
+		protected bool isAlive;
 		// 動けるかフラグ。拡張予定
 		public bool CanMove
 		{
@@ -35,16 +36,17 @@ namespace Character
 		BoolReactiveProperty groundEdgeCheck = new BoolReactiveProperty();
 
 		[SerializeField]
-		bool isGroundEdgeChecker = true;
+		protected bool isGroundEdgeChecker = true;
 
 		public virtual void Awake()
 		{
 			colliderList = GetComponents<Collider2D>();
 			groundCollider = GetComponent<GroundCollider>();
 			rb2D = GetComponent<Rigidbody2D>();
+			damageCtrl = GetComponent<DamageController>();
 		}
 
-		public virtual void Start()
+		protected virtual void Start()
 		{
 			// dirが変化したらlocalScaleを更新
 			dir.Subscribe(_ =>
@@ -54,6 +56,13 @@ namespace Character
 			.AddTo(this.gameObject);
 
 			isAlive = true;
+
+			Initialize();
+		}
+
+		protected virtual void Initialize()
+		{
+
 		}
 
 		private void Update()
@@ -144,11 +153,11 @@ namespace Character
 				// 見えているぞ
 				isVisible = true;
 			}
-			else
-			{
-				// 観なかったことにしてやろう
-				isVisible = false;
-			}
+		}
+
+		private void OnBecameInvisible()
+		{
+			isVisible = false;
 		}
 
 		/// <summary>
@@ -196,24 +205,18 @@ namespace Character
 		}
 
 		/// <summary>
-		/// TODO
+		/// ダメージを受けた処理。DamageControllerに委任
 		/// </summary>
 		void Damaged()
 		{
-			Dead();
+			if(damageCtrl != null)
+			{
+				damageCtrl.OnDamaged();
+			}
 		}
 
 		/// <summary>
-		/// 死亡
-		/// </summary>
-		void Dead()
-		{
-			isAlive = false;
-			Destroy(gameObject);
-		}
-
-		/// <summary>
-		/// ボスが死んだ時に呼び出す。
+		/// ボスが死んだ時に呼び出す。使うかは未定
 		/// </summary>
 		protected virtual void BossDefeated()
 		{

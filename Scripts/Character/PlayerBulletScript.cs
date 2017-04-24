@@ -5,20 +5,6 @@ using Character;
 
 public class PlayerBulletScript : BaseBullet {
 
-
-	/// <summary>
-	/// 初期化。生成時にPlayerのスピードを取得
-	/// </summary>
-	/// <param name="playerSpeed"></param>
-	public void Initialize (float playerVx, float playerVy)
-	{
-		// 敵を標的にする
-		isEnemyTarget = true;
-
-		bulletSpeedVector = new Vector2(bulletSpeedVector.x * Mathf.Sign(playerVx), bulletSpeedVector.y * Mathf.Sign(playerVy));
-		bulletSpeedVector += new Vector2(playerVx * 2, playerVy * 2);
-	}
-
 	/// <summary>
 	/// 角度で初期化
 	/// </summary>

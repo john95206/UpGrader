@@ -11,6 +11,8 @@ namespace UpGradeItem
 	{
 		[Inject]
 		UpGradeManager upgradeManager;
+		[SerializeField]
+		bool isDestroy = false;
 
 		protected virtual void OnTriggerEnter2D(Collider2D col)
 		{
@@ -66,7 +68,10 @@ namespace UpGradeItem
 		/// </summary>
 		void Dead()
 		{
-			// Destroy(gameObject);
+			if (isDestroy)
+			{
+				Destroy(gameObject);
+			}
 		}
 	}
 }
